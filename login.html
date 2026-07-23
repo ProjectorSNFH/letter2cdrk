@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>편지함</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="screen" id="login-screen">
+  <div class="pin-wrap">
+    <div>
+      <div class="pin-title title-font">편지함</div>
+      <div class="pin-subtitle">네 자리 암호를 입력해줘</div>
+    </div>
+
+    <div class="pin-boxes" id="pin-boxes">
+      <div class="pin-box" data-i="0"></div>
+      <div class="pin-box" data-i="1"></div>
+      <div class="pin-box" data-i="2"></div>
+      <div class="pin-box" data-i="3"></div>
+      <input
+        id="pin-input"
+        class="pin-hidden-input"
+        type="tel"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        maxlength="4"
+        autocomplete="off"
+        autofocus
+      />
+    </div>
+
+    <div class="pin-error" id="pin-error"></div>
+  </div>
+</div>
+
+<script src="js/common.js"></script>
+<script>
+  const boxesWrap = document.getElementById("pin-boxes");
+  const boxes = [...document.querySelectorAll(".pin-box")];
+  const input = document.getElementById("pin-input");
+  const errorEl = document.getElementById("pin-error");
+  const screen = document.getElementById("login-screen");
+  let busy = false;
+
+  clearSession();
+  input.focus();
+  document.addEventListener("click", () => input.focus());
+
+  function render() {
+    const val = input.value;
+    boxes.forEach((box, i) => {
+      box.innerHTML = "";
+      box.classList.remove("filled", "active");
+      if (i < val.length) {
+        box.classList.add("filled");
+        const dot = document.createElement("div");
+        dot.className = "dot";
+        box.appendChild(dot);
+      } else if (i === val.length) {
+        box.classList.add("active");
+      }
+    });
+  }
+
+  function shakeAndReset() {
+    boxesWrap.classList.add("shake");
+    errorEl.textContent = "암호가 맞지 않아요";
+    setTimeout(() => {
+      boxesWrap.classList.remove("shake");
+      input.value = "";
+      render();
+    }, 380);
+  }
+
+  input.addEventListener("input", async () => {
+    input.value = input.value.replace(/[^0-9]/g, "").slice(0, 4);
+    render();
+    errorEl.textContent = "";
+
+    if (input.value.length === 4 && !busy) {
+      busy = true;
+      input.blur();
+      const pin = input.value;
+      const result = await apiAuth(pin);
+
+      if (result.ok) {
+        saveSession({ pin, role: result.role, name: result.name });
+        screen.classList.add("fade-out");
+        setTimeout(() => {
+          location.href = result.role === "send" ? "send.html" : "sent.html";
+        }, 480);
+      } else {
+        shakeAndReset();
+        busy = false;
+        setTimeout(() => input.focus(), 400);
+      }
+    }
+  });
+
+  render();
+</script>
+
+</body>
+</html>

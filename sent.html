@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>친구들의 편지</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="screen" id="sent-screen" style="display:block;">
+  <div class="sent-topbar" id="topbar"></div>
+  <div class="sky-field" id="sky-field"></div>
+
+  <div class="reader-overlay" id="reader-overlay">
+    <button class="reader-close" id="reader-close">✕</button>
+    <div class="envelope-shell" id="envelope-shell">
+      <div class="env-back"></div>
+      <div class="paper-sheet" id="paper-sheet">
+        <div class="paper-scroll" id="paper-scroll">
+          <div class="paper-text" id="paper-text"></div>
+        </div>
+        <div class="emoji-bar-wrap">
+          <div class="emoji-bar" id="emoji-bar"></div>
+        </div>
+      </div>
+      <div class="env-flap"></div>
+    </div>
+  </div>
+</div>
+
+<script src="js/common.js"></script>
+<script src="js/sent.js"></script>
+</body>
+</html>

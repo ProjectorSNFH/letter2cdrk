@@ -1,0 +1,9 @@
+{
+  "name": "farewell-letters",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@vercel/kv": "^2.0.0"
+  }
+}
